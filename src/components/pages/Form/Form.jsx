@@ -22,8 +22,8 @@ function Form() {
       </LogoSpace>
       <FormSpace>
         <DatosUsuarios />
-        <DatosPersonales />
-        <DatosEntrega />
+        {/* <DatosPersonales />
+        <DatosEntrega /> */}
       </FormSpace>
     </Box>
   )
