@@ -1,8 +1,9 @@
 import { useState } from 'react'
-import { validarEmail, validarPassword } from './validation'
+import PropTypes from 'prop-types'
+import { validarEmail, validarPassword } from '../../../validation'
 import { Box, TextField, Button } from '@mui/material'
 
-function DatosUsuarios() {
+function DatosUsuarios({ updateStep }) {
   const [email, setEmail] = useState({
     value: '',
     valid: null,
@@ -18,6 +19,7 @@ function DatosUsuarios() {
       console.log('Siguiente')
       console.log(email)
       console.log(password)
+      updateStep(1)
     } else {
       console.log('No se puede continuar')
     }
@@ -80,6 +82,10 @@ function DatosUsuarios() {
       </Button>
     </Box>
   )
+}
+
+DatosUsuarios.propTypes = {
+  updateStep: PropTypes.func.isRequired,
 }
 
 export default DatosUsuarios
