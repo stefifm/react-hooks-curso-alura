@@ -46,6 +46,20 @@ function Form() {
   const onSubmit = (e, step, pasos) => {
     e.preventDefault()
     const newStep = step + 1
+
+    //  Validar que no haya campos vacios o invalidos
+    const cp = { ...pasos }
+    const inputsValues = cp[step].inputs.map((input) => input.value)
+    const inputsValid = cp[step].inputs.map((input) => input.valid)
+    const allValid = inputsValid.every((valid) => valid)
+    if (!allValid) {
+      return
+    }
+    const emptyValues = inputsValues.some((value) => value === '')
+    if (emptyValues) {
+      return
+    }
+    // Si todo esta bien, avanzar al siguiente paso
     setStep(newStep)
     if (newStep === 3) {
       console.log('Enviar datos al backend ', pasos)
@@ -156,7 +170,7 @@ function Form() {
           validator: validarCiudad,
         },
         {
-          label: 'Número de Teléfono',
+          label: 'Estado/Provincia',
           type: 'tex',
           value: '',
           valid: null,
