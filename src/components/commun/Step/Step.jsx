@@ -1,11 +1,14 @@
-import { useState, useContext } from 'react'
+import { useContext } from 'react'
 import { CounterContext } from '../../../Context'
+import { useAuth } from '../../../Hooks/useAuth'
 import PropTypes from 'prop-types'
 import { Box, TextField, Button } from '@mui/material'
 
 function Step({ step, data, pasos }) {
   const { inputs, buttonText, onSubmit } = data
-  const { count } = useContext(CounterContext)
+  const { count, user } = useContext(CounterContext)
+  const access = useAuth(user.jwt)
+  console.log(access)
   return (
     <Box
       component='form'
