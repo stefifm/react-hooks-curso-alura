@@ -24,8 +24,6 @@ function Form() {
   const [step, setStep] = useState(0)
   const [pasos, setPasos] = useState({})
 
-  useEffect(() => {}, [])
-
   // Implementación con una api pero no lo usaremos en este proyecto
 
   // useEffect(() => {
@@ -45,11 +43,22 @@ function Form() {
     setStep(step)
   }
 
-  const onSubmit = () => {}
+  const onSubmit = (e, step, pasos) => {
+    e.preventDefault()
+    const newStep = step + 1
+    setStep(newStep)
+    if (newStep === 3) {
+      console.log('Enviar datos al backend ', pasos)
+    }
+  }
 
-  const handleChange = (e, position, currentStep, validator) => {
+  const handleChange = (e, position, currentStep, validator, pasos) => {
     const value = e.target.value
     const valid = validator(value)
+    const cp = { ...pasos }
+    cp[currentStep].inputs[position].value = value
+    cp[currentStep].inputs[position].valid = valid
+    setPasos(cp)
   }
 
   const steps = {
@@ -80,11 +89,90 @@ function Form() {
           helperText: 'Contraseña debe ser mayor o igual a 8 caracteres y menor a 50',
           validator: validarPassword,
         },
+        {
+          label: 'Cuenta de GitHub',
+          type: 'text',
+          value: '',
+          valid: null,
+          onChange: handleChange,
+          helperText: 'Cuenta de GitHub debe ser mayor o igual a 8 caracteres y menor a 50',
+          validator: validarPassword,
+        },
       ],
       buttonText: 'Siguiente',
       onSubmit,
     },
+    1: {
+      inputs: [
+        {
+          label: 'Nombre',
+          type: 'text',
+          value: '',
+          valid: null,
+          onChange: handleChange,
+          helperText: 'Tiene que tener más de un caracter y menos de 30',
+          validator: validarNombre,
+        },
+        {
+          label: 'Apellido',
+          type: 'text',
+          value: '',
+          valid: null,
+          onChange: handleChange,
+          helperText: 'Tiene que tener más de 2 caracteres y menos de 50',
+          validator: validarApellido,
+        },
+        {
+          label: 'Número de Teléfono',
+          type: 'number',
+          value: '',
+          valid: null,
+          onChange: handleChange,
+          helperText: 'Tiene que tener al menos 8 digitos y menor o igual a 14 digitos',
+          validator: validarTelefono,
+        },
+      ],
+      buttonText: 'Siguiente',
+      onSubmit,
+    },
+    2: {
+      inputs: [
+        {
+          label: 'Dirección',
+          type: 'text',
+          value: '',
+          valid: null,
+          onChange: handleChange,
+          helperText: 'Dirección tiene que tener más de 4 carcteres',
+          validator: validarDireccion,
+        },
+        {
+          label: 'Ciudad',
+          type: 'text',
+          value: '',
+          valid: null,
+          onChange: handleChange,
+          helperText: 'Ciudad tiene que tener más de 4 caracteres',
+          validator: validarCiudad,
+        },
+        {
+          label: 'Número de Teléfono',
+          type: 'tex',
+          value: '',
+          valid: null,
+          onChange: handleChange,
+          helperText: 'Estado tiene que tener más de 4 caracteres',
+          validator: validarEstado,
+        },
+      ],
+      buttonText: 'Crear Cuenta',
+      onSubmit,
+    },
   }
+
+  useEffect(() => {
+    setPasos(stepsFlow)
+  }, [])
 
   return (
     <Box
@@ -100,10 +188,14 @@ function Form() {
       <FormSpace>
         {step < 3 && <StepperComponent step={step} />}
         {/* {steps[step]} */}
-        <Step
-          data={stepsFlow[step]}
-          step={step}
-        />
+        {step < 3 && pasos[step] && (
+          <Step
+            data={pasos[step]}
+            step={step}
+            pasos={pasos}
+          />
+        )}
+        {step === 3 && <Complete />}
       </FormSpace>
     </Box>
   )
