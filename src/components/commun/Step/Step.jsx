@@ -1,9 +1,11 @@
-import { useState } from 'react'
+import { useState, useContext } from 'react'
+import { CounterContext } from '../../../Context'
 import PropTypes from 'prop-types'
 import { Box, TextField, Button } from '@mui/material'
 
-function Step({ step, data }) {
+function Step({ step, data, pasos }) {
   const { inputs, buttonText, onSubmit } = data
+  const { count } = useContext(CounterContext)
   return (
     <Box
       component='form'
@@ -14,7 +16,8 @@ function Step({ step, data }) {
         alignItems: 'center',
         justifyContent: 'center',
       }}
-      onSubmit={onSubmit}>
+      onSubmit={(e) => onSubmit(e, step, pasos)}>
+      <strong>El valor del contador es {count} </strong>
       {inputs.map((input, index) => {
         const { label, type, value, valid, onChange, helperText, validator } = input
         return (
@@ -28,7 +31,7 @@ function Step({ step, data }) {
             error={valid === false}
             helperText={valid === false && helperText}
             value={value}
-            onChange={(e) => onChange(e, index, step, validator)}
+            onChange={(e) => onChange(e, index, step, validator, pasos)}
           />
         )
       })}
@@ -45,6 +48,7 @@ Step.propTypes = {
   // updateStep: PropTypes.func.isRequired,
   data: PropTypes.object.isRequired,
   step: PropTypes.number.isRequired,
+  pasos: PropTypes.object.isRequired,
 }
 
 export default Step
